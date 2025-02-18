@@ -1,0 +1,4 @@
+url,name,company,category,notes
+https://example.com/about,Example Corp,Example Corporation,Technology,"Main corporate website"
+https://example.com/team,Example Team,Example Corporation,Technology,"Team page with contact info"
+https://another-company.com/contact,Another Co,Another Company,Manufacturing,"Contact page"
