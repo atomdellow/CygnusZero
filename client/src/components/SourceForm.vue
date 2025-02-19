@@ -40,17 +40,28 @@
 
     <div class="form-group">
       <label>Content Type</label>
-      <select v-model="form.contentType" required>
-        <option value="" disabled>Select a content type</option>
-        <option v-for="type in store.contentTypes" 
-                :key="type._id" 
-                :value="type._id">
+      <div v-if="contentTypeLoading" class="loading">
+        Loading content types...
+      </div>
+      <div v-else-if="contentTypeError" class="error">
+        {{ contentTypeError }}
+        <button @click="loadContentTypes" class="btn">Retry</button>
+      </div>
+      <select 
+        v-else
+        v-model="form.contentTypeId" 
+        required
+        :disabled="!store.hasContentTypes"
+      >
+        <option value="">Select a content type</option>
+        <option 
+          v-for="type in store.contentTypes" 
+          :key="type._id" 
+          :value="type._id"
+        >
           {{ type.name }}
         </option>
       </select>
-      <div v-if="!store.contentTypes.length" class="warning">
-        No content types available. Please add content types first.
-      </div>
     </div>
 
     <div class="form-group">
@@ -183,6 +194,7 @@ import { ref, onMounted } from 'vue'
 import { useSourceStore } from '../stores/source'
 import { useRouter } from 'vue-router'
 import { useContentTypeStore } from '../stores/contentType'
+import { storeToRefs } from 'pinia'
 
 const CONTENT_TYPES = ['article', 'full', 'auto', 'news', 'blog', 'summary'];
 
@@ -334,6 +346,8 @@ export default {
       }
     }
 
+    const { loading: contentTypeLoading, error: contentTypeError } = storeToRefs(store)
+
     onMounted(() => {
       loadContentTypes()
     })
@@ -355,7 +369,10 @@ export default {
       loading,
       store, // Return the store to make it available in template
       selectedAdditionalType,
-      addAdditionalType
+      addAdditionalType,
+      contentTypeLoading,
+      contentTypeError,
+      loadContentTypes
     }
   },
   data() {

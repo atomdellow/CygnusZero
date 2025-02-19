@@ -74,55 +74,49 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref, onMounted } from 'vue'
 
-export default {
-  name: 'ContentTypeForm',
-  props: {
-    editingType: {
-      type: Object,
-      default: null
-    }
-  },
-  emits: ['save', 'close'],
-  setup(props, { emit }) {
-    const form = ref({
-      name: '',
-      description: '',
-      selectors: {
-        listPage: {
-          container: '',
-          title: '',
-          content: '',
-          date: '',
-          links: ''
-        },
-        articlePage: {
-          container: '',
-          title: '',
-          content: '',
-          date: '',
-          links: ''
-        }
-      }
-    })
+const props = defineProps({
+  editingType: {
+    type: Object,
+    default: null
+  }
+})
 
-    onMounted(() => {
-      if (props.editingType) {
-        form.value = JSON.parse(JSON.stringify(props.editingType))
-      }
-    })
+const emit = defineEmits(['save', 'close'])
 
-    const handleSubmit = () => {
-      emit('save', form.value)
-    }
-
-    return {
-      form,
-      handleSubmit
+const form = ref({
+  name: '',
+  description: '',
+  isActive: true,
+  selectors: {
+    listPage: {
+      container: '',
+      title: '',
+      content: '',
+      date: '',
+      links: ''
+    },
+    articlePage: {
+      container: '',
+      title: '',
+      content: '',
+      date: '',
+      links: ''
     }
   }
+})
+
+onMounted(() => {
+  if (props.editingType) {
+    // Deep copy the editing type to avoid mutations
+    form.value = JSON.parse(JSON.stringify(props.editingType))
+  }
+})
+
+const handleSubmit = () => {
+  emit('save', form.value)
 }
 </script>
 

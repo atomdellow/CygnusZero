@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
+const debug = require('./middleware/debug');
 
 const app = express();
 
@@ -15,6 +16,9 @@ app.use((req, res, next) => {
   console.log(`${req.method} ${req.path}`);
   next();
 });
+
+// Add before your routes
+app.use(debug);
 
 // Routes
 const contentTypeRouter = require('./routes/contentType');
